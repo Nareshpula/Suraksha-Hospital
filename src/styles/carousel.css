@@ -1,0 +1,33 @@
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.slide-in {
+  animation: slideIn 700ms ease-in-out forwards;
+}
+
+.slide-out {
+  animation: slideOut 700ms ease-in-out forwards;
+}
+
+.carousel-image {
+  transition: transform 700ms ease-in-out, opacity 700ms ease-in-out;
+}

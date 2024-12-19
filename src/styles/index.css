@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Navbar background transition */
+.navbar-scroll-transition {
+  transition: background-color 300ms ease-in-out;
+}
+
+/* Other existing styles... */
