@@ -1,0 +1,46 @@
+# Force HTTPS for all requests
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Redirect Netlify URL to primary domain
+[[redirects]]
+  from = "https://cerulean-heliotrope-b20e2c.netlify.app/*"
+  to = "https://www.surakshahospitalmadanapalle.com/:splat"
+  status = 301
+  force = true
+
+# Redirect non-www HTTP to www HTTPS
+[[redirects]]
+  from = "http://surakshahospitalmadanapalle.com/*"
+  to = "https://www.surakshahospitalmadanapalle.com/:splat"
+  status = 301
+  force = true
+
+# Redirect non-www HTTPS to www HTTPS
+[[redirects]]
+  from = "https://surakshahospitalmadanapalle.com/*"
+  to = "https://www.surakshahospitalmadanapalle.com/:splat"
+  status = 301
+  force = true
+
+# Redirect www HTTP to www HTTPS
+[[redirects]]
+  from = "http://www.surakshahospitalmadanapalle.com/*"
+  to = "https://www.surakshahospitalmadanapalle.com/:splat"
+  status = 301
+  force = true
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
