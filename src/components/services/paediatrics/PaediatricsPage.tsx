@@ -58,7 +58,7 @@ const PaediatricsPage = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <img
-                src="https://plus.unsplash.com/premium_photo-1664474647299-7ef90322be6c"
+                src="https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.N.SWAPNA.jpg"
                 alt="Dr. N. Swapna"
                 className="rounded-lg shadow-2xl"
               />
@@ -86,7 +86,7 @@ const PaediatricsPage = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <Clock className="w-6 h-6 text-blue-600" />
-                  <span className="text-gray-700">Available Mon-Sat, 9:00 AM - 5:00 PM</span>
+                  <span className="text-gray-700">Available Mon-Sat, 10:00 AM - 3:30 PM</span>
                 </div>
               </div>
             </div>

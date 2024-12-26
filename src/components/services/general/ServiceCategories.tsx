@@ -46,10 +46,10 @@ const ServiceCategories = () => {
 
         <div className="mt-16 text-center">
           <button 
-            onClick={() => document.getElementById('appointment')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-emerald-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
+            onClick={() => navigate('/appointments')}
+            className="bg-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-emerald-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            Book an Appointment
+            Book an Appointments
           </button>
         </div>
       </div>

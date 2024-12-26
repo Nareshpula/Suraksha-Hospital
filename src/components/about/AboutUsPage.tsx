@@ -6,24 +6,6 @@ import TranslatedText from '../language/TranslatedText';
 const AboutUsPage = () => {
   const navigate = useNavigate();
 
-  const milestones = [
-    {
-      year: "2020",
-      titleKey: "Establishment",
-      description: "Founded Bysani Suraksha Speciality Hospital with a vision to provide comprehensive healthcare services"
-    },
-    {
-      year: "2021",
-      titleKey: "NICU Facility",
-      description: "Launched state-of-the-art NICU facility for advanced neonatal care"
-    },
-    {
-      year: "2022",
-      titleKey: "Laboratory Services",
-      description: "Expanded services with modern diagnostic laboratory facilities"
-    }
-  ];
-
   const values = [
     {
       icon: Heart,
@@ -42,7 +24,7 @@ const AboutUsPage = () => {
     }
   ];
 
-  const vision = "To be the leading healthcare provider in Rayachoty, delivering exceptional medical services with a focus on General Medicine, Physician, Diabetologist and Pediatric care.";
+  const vision = "To be the leading healthcare provider in Madanapalle, delivering exceptional medical services with a focus on General Medicine Physician Diabetologist and Pediatric care.";
 
   const mission = "To provide comprehensive, high-quality healthcare services that improve the health and well-being of our community through expert medical care, advanced technology, and compassionate service.";
 
@@ -72,7 +54,7 @@ const AboutUsPage = () => {
             About Bysani Suraksha Speciality Hospital
           </h1>
           <p className="text-xl text-rose-100 mb-8 max-w-3xl animate-fade-in-delayed">
-            A leading healthcare institution in the Madanapalle and we committed to providing exceptional medical care with specialized focus on General Medicine, Physician, Diabetologist and Pediatric services.
+            A leading healthcare institution in the Madanapalle and we committed to providing exceptional medical care with specialized focus on General Medicine Physician Diabetologist and Pediatric services.
           </p>
         </div>
       </div>
@@ -120,21 +102,40 @@ const AboutUsPage = () => {
         {/* Milestones */}
         <div className="mb-20">
           <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Our Journey</h2>
-          <div className="space-y-8">
-            {milestones.map((milestone, index) => (
-              <div 
-                key={index}
-                className="flex items-start space-x-8 bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div className="flex-shrink-0 w-24 h-24 bg-rose-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-rose-600">{milestone.year}</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{milestone.titleKey}</h3>
-                  <p className="text-gray-600">{milestone.description}</p>
-                </div>
-              </div>
-            ))}
+          <div className="bg-white p-8 rounded-xl shadow-lg space-y-8">
+            <p className="text-gray-700 leading-relaxed">
+              Established in 2012, Bysani Suraksha Hospital has emerged as a beacon of medical excellence and patient-centric care in Madanapalle. With over a decade of unwavering commitment, we have been at the forefront of delivering integrated healthcare solutions, ensuring the highest standards of treatment and compassionate care.
+            </p>
+            
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-gray-900">Our multidisciplinary expertise spans a broad spectrum of medical services, including:</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start space-x-3">
+                  <span className="w-2 h-2 bg-rose-500 rounded-full mt-2 flex-shrink-0" />
+                  <span>Internal Medicine: Comprehensive diagnosis and management of acute and chronic illnesses.</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <span className="w-2 h-2 bg-rose-500 rounded-full mt-2 flex-shrink-0" />
+                  <span>Paediatrics and Neonatology: Specialized care for children and newborns, ensuring their health and development.</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <span className="w-2 h-2 bg-rose-500 rounded-full mt-2 flex-shrink-0" />
+                  <span>Endocrinology (Diabetes Care): Advanced diagnostic and therapeutic approaches for diabetes and metabolic disorders.</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <span className="w-2 h-2 bg-rose-500 rounded-full mt-2 flex-shrink-0" />
+                  <span>General and Preventive Medicine: Holistic treatment plans aimed at maintaining optimal health and preventing disease progression.</span>
+                </li>
+              </ul>
+            </div>
+            
+            <p className="text-gray-700 leading-relaxed">
+              With cutting-edge facilities and a dedicated team of highly skilled physicians, we have consistently pushed boundaries to offer evidence-based medical interventions tailored to the unique needs of our patients. Our institution has become synonymous with clinical precision, advanced medical technologies, and ethical practices, earning the trust of the community we proudly serve.
+            </p>
+            
+            <p className="text-gray-700 leading-relaxed">
+              As we continue to evolve in a rapidly advancing healthcare landscape, Bysani Suraksha Hospital remains steadfast in its vision to be a trusted healthcare partner. By embracing innovation and fostering excellence, we are committed to enhancing lives and setting new benchmarks in healthcare delivery for the residents of Madanapalle and beyond.
+            </p>
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ const ContactUs = () => {
         <div>
           <h4 className="text-white font-medium mb-2">Location</h4>
           <p className="text-gray-400">
-            #2/259, Societry Colony<br />
+            Suraksha Hospital #2/259, Societry Colony<br />
             Near NTR Circle<br />
             Madanapalle-517325<br />
             Annamayya-Rayachoty, Dist<br />
@@ -25,7 +25,7 @@ const ContactUs = () => {
           <p className="text-gray-400">
             Reception: 08571-220345<br />
             Mobile: 96666426748<br />
-            Emergency: 24/7
+            NICU Emergency: 24/7
           </p>
         </div>
       </div>

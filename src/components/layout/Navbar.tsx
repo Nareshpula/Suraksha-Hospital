@@ -42,7 +42,12 @@ const Navbar = () => {
   };
 
   const navigateToHealthTools = () => {
-    navigate('/health-tools', { replace: true });
+    navigate('/health-tools');
+    setIsOpen(false);
+  };
+
+  const navigateToAppointments = () => {
+    navigate('/appointments');
     setIsOpen(false);
   };
 
@@ -73,6 +78,9 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <NavbarLink onClick={navigateToHome}>
               {translations?.nav?.home || 'Home'}
+            </NavbarLink>
+            <NavbarLink onClick={navigateToAppointments}>
+              Book Appointment
             </NavbarLink>
             <NavbarLink onClick={navigateToAbout}>
               {translations?.nav?.aboutUs || 'About Us'}

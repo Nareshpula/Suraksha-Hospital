@@ -7,7 +7,7 @@ const WelcomeText = () => {
         Welcome to Bysani Suraksha Speciality Hospital
       </h1>
       <p className="sub-text text-xl md:text-2xl text-center mb-16 max-w-3xl mx-auto opacity-0 animate-fade-in-delayed">
-        Where Advanced General, Physician, Diabetologist and Pediatric Care Meets Medical Excellence
+        Where Advanced General Physician Diabetologist and Pediatric Care Meets Medical Excellence
       </p>
     </div>
   );

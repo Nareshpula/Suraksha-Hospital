@@ -1,8 +1,8 @@
 import React from 'react';
-import { Menu, Home, Info, Stethoscope, Users, Activity } from 'lucide-react';
+import { Menu, Home, Info, Stethoscope, Users, Activity, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from '../language/LanguageContext';
 import MobileLanguageSelector from '../mobile/MobileLanguageSelector';
+import { useTranslation } from '../language/LanguageContext';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -31,6 +31,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
   const menuItems = [
     { icon: Home, label: translations?.nav?.home || 'Home', onClick: onHomeClick },
+    { icon: Calendar, label: translations?.quickActions?.bookAppointment || 'Book Appointment', onClick: () => navigate('/appointments') },
     { icon: Info, label: translations?.nav?.aboutUs || 'About Us', onClick: onAboutClick },
     { icon: Stethoscope, label: translations?.nav?.services || 'Services', onClick: () => onSectionClick('services') },
     { icon: Users, label: translations?.nav?.doctors || 'Doctors', onClick: () => onSectionClick('doctors') },

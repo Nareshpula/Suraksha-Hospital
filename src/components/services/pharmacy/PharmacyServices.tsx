@@ -27,7 +27,7 @@ const services: PharmacyService[] = [
   {
     icon: Stethoscope,
     title: "Get Your Medicines Delivered to Your Doorstep",
-    description: "Get medicines delivered to your doorstep..! Please Call: 9666426748, Landline: 08571-220345"
+    description: "Get medicines delivered to your doorstep..! Please Call: 9666426748"
   }
 ];
 

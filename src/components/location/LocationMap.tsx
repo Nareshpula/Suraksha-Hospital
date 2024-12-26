@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
+import React, { useEffect, useRef, useState } from 'react';
+import MapsLoader from '../../utils/mapsLoader';
 
 // Exact coordinates for Bysani Suraksha Speciality Hospital
 const HOSPITAL_LOCATION = {
@@ -9,17 +9,14 @@ const HOSPITAL_LOCATION = {
 
 const LocationMap = () => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const initMap = async () => {
-      const loader = new Loader({
-        apiKey: 'AIzaSyDOCvUZMfAttYhSMtnZxcYR5i3Iky-a5XI',
-        version: 'weekly'
-      });
-
       try {
-        const google = await loader.load();
+        const google = await MapsLoader.getInstance().load();
         if (!mapRef.current) return;
+        setLoadError(null);
 
         const map = new google.maps.Map(mapRef.current, {
           center: HOSPITAL_LOCATION,
@@ -76,12 +73,21 @@ const LocationMap = () => {
         infoWindow.open(map, marker);
 
       } catch (error) {
-        console.error('Error loading Google Maps:', error);
+        console.error('Failed to initialize map:', error);
+        setLoadError('Failed to load map. Please try again later.');
       }
     };
 
     initMap();
   }, []);
+
+  if (loadError) {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-100 rounded-lg">
+        <p className="text-gray-600">{loadError}</p>
+      </div>
+    );
+  }
 
   return (
     <div 

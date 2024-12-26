@@ -34,7 +34,7 @@ const Hero = () => {
           className={`text-xl md:text-2xl text-center mb-16 max-w-3xl mx-auto transition-all duration-700 delay-200
             ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
-          {translations?.hero?.subtitle || 'Where Advanced General, Physician, Diabetologist and Pediatric Care Meets Medical Excellence'}
+          {translations?.hero?.subtitle || 'Where Advanced General Physician Diabetologist and Pediatric Care Meets Medical Excellence'}
         </p>
       </div>
       <QuickActions />

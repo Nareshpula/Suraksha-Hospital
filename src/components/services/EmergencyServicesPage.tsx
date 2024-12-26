@@ -56,7 +56,7 @@ const EmergencyServicesPage = () => {
             <div className="md:flex">
               <div className="md:flex-shrink-0 md:w-96">
                 <img
-                  src="https://images.pexels.com/photos/8376277/pexels-photo-8376277.jpeg"
+                  src="https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.N.SWAPNA.jpg"
                   alt="Dr. N. Swapna"
                   className="h-full w-full object-cover md:h-full"
                 />

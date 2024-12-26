@@ -9,7 +9,7 @@ const ContactSection = () => {
         <div>
           <h4 className="text-white font-medium mb-2">Location</h4>
           <p className="text-gray-400">
-            #2/259, Society Colony<br />
+            Suraksha Hospital #2/259, Society Colony<br />
             Near NTR Circle<br />
             Madanapalle-517325<br />
             Annamayya-Rayachoty, Dist<br />
@@ -25,7 +25,7 @@ const ContactSection = () => {
           <p className="text-gray-400">
             Reception: 08571-220345<br />
             Mobile: 9666426748<br />
-            Emergency: 24/7
+            NICU Emergency: 24/7
           </p>
         </div>
       </div>
@@ -33,10 +33,13 @@ const ContactSection = () => {
       <div className="flex items-start space-x-3">
         <Mail className="w-5 h-5 text-emerald-500 mt-1 flex-shrink-0" />
         <div>
-          <h4 className="text-white font-medium mb-2">Email</h4>
+          <h4 className="text-white font-medium mb-2">Working Hours</h4>
           <p className="text-gray-400">
-            info@bysanisuraksha.com<br />
-            support@bysanisuraksha.com
+            NICU Emergency: 24/7<br />
+            OPD Mon-Sat: 10:00 AM - 03:30 PM<br />
+            Evening: 06:00 PM - 09:00 PM<br />
+            Sun: 10:00 AM - 02:00 PM<br />
+            Laboratory: 10:00 AM - 09:00 PM
           </p>
         </div>
       </div>

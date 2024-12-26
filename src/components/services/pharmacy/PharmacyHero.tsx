@@ -10,7 +10,7 @@ const PharmacyHero: React.FC<PharmacyHeroProps> = ({ onBack }) => {
     <ServiceHero
       title="Pharmacy Services"
       description="Round-the-clock pharmacy services with expert medication management and professional consultation."
-      backgroundImage="https://images.unsplash.com/photo-1631549916768-4119b2e5f926"
+      backgroundImage="https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Pharmacy.jpg?t=2024-12-26T08%3A17%3A36.954Z"
       accentColor="border-teal-600"
       onBack={onBack}
     />
