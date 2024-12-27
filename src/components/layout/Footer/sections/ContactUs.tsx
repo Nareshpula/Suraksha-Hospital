@@ -35,8 +35,7 @@ const ContactUs = () => {
         <div>
           <h4 className="text-white font-medium mb-2">Email</h4>
           <p className="text-gray-400">
-            info@bysanisuraksha.com<br />
-            support@bysanisuraksha.com
+            info@surakshahospitalmadanapalle.com
           </p>
         </div>
       </div>

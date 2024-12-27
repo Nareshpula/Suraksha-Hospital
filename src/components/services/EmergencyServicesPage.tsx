@@ -6,7 +6,7 @@ const EmergencyServicesPage = () => {
   const navigate = useNavigate();
 
   const handleEmergencyCall = () => {
-    window.location.href = 'tel:+919666426748';
+    navigate('/', { state: { scrollToSection: 'services' } });
   };
 
   return (

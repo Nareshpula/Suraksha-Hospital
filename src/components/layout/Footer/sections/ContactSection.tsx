@@ -24,7 +24,7 @@ const ContactSection = () => {
           <h4 className="text-white font-medium mb-2">Contact Numbers</h4>
           <p className="text-gray-400">
             Reception: 08571-220345<br />
-            Mobile: 9666426748<br />
+            Mobile: 96666426748<br />
             NICU Emergency: 24/7
           </p>
         </div>
@@ -33,13 +33,10 @@ const ContactSection = () => {
       <div className="flex items-start space-x-3">
         <Mail className="w-5 h-5 text-emerald-500 mt-1 flex-shrink-0" />
         <div>
-          <h4 className="text-white font-medium mb-2">Working Hours</h4>
+          <h4 className="text-white font-medium mb-2">Contact</h4>
           <p className="text-gray-400">
-            NICU Emergency: 24/7<br />
-            OPD Mon-Sat: 10:00 AM - 03:30 PM<br />
-            Evening: 06:00 PM - 09:00 PM<br />
-            Sun: 10:00 AM - 02:00 PM<br />
-            Laboratory: 10:00 AM - 09:00 PM
+            Email: info@surakshahospitalmadanapalle.com<br />
+            Available 24/7 for inquiries
           </p>
         </div>
       </div>

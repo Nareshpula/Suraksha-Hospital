@@ -2,9 +2,11 @@ import React from 'react';
 import { Calendar, Siren } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ServiceCard from './ServiceCard';
+import { useAppointment } from '../../hooks/useAppointment';
 
 const AppointmentSection = () => {
   const navigate = useNavigate();
+  const { openModal } = useAppointment();
 
   const services = [
     {
@@ -16,7 +18,9 @@ const AppointmentSection = () => {
       image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600',
       hoverImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600',
       buttonText: 'Schedule Now',
-      onClick: () => navigate('/appointments')
+      onClick: () => {
+        navigate('/appointments');
+      }
     },
     {
       icon: Siren,

@@ -11,6 +11,7 @@ interface ServiceCardProps {
   image: string;
   hoverImage: string;
   path?: string;
+  onClick?: () => void;
   buttonText?: string;
 }
 
@@ -23,19 +24,29 @@ const ServiceCard = ({
   image,
   hoverImage,
   path,
+  onClick,
   buttonText
 }: ServiceCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    if (path) {
-      navigate(path, { replace: true });
+    try {
+      if (onClick) {
+        onClick();
+      } else if (path) {
+        navigate(path);
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
     }
   };
 
   return (
     <div 
-      onClick={handleClick}
+      onClick={(e) => {
+        e.preventDefault();
+        handleClick();
+      }}
       className={`group relative overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:-translate-y-1 hover:shadow-xl cursor-pointer hover:scale-105`}
     >
       <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:scale-110">

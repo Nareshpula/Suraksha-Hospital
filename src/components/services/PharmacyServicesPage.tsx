@@ -8,7 +8,7 @@ const PharmacyServicesPage = () => {
   const navigate = useNavigate();
 
   const handleBackToServices = () => {
-    navigate('/', { state: { scrollToServices: true } });
+    navigate('/', { state: { scrollToSection: 'services' } });
   };
 
   return (

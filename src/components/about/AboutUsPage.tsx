@@ -93,7 +93,7 @@ const AboutUsPage = () => {
                   </div>
                   <h3 className="text-xl font-semibold ml-4">{value.title}</h3>
                 </div>
-                <p className="text-gray-600">{value.description}</p>
+                <p className="text-gray-600 mt-4">{value.description}</p>
               </div>
             ))}
           </div>

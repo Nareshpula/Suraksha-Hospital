@@ -12,6 +12,33 @@ import OTPVerification from './OTPVerification';
 import { Alert } from '../common/Alert';
 import { createOTPVerification } from '../../services/otpService';
 import { toIST, formatISTDate, formatISTTime, parseISTDateTime } from '../../utils/dateTime';
+import DatePicker from 'react-datepicker';
+import { format, parse, isValid } from 'date-fns';
+import "react-datepicker/dist/react-datepicker.css";
+
+// Configure DatePicker popper props
+const popperConfig = {
+  modifiers: [
+    {
+      name: "offset",
+      options: {
+        offset: [0, 8]
+      }
+    },
+    {
+      name: "preventOverflow",
+      options: {
+        boundary: "viewport"
+      }
+    }
+  ],
+  strategy: "fixed"
+};
+
+interface TimeOption {
+  value: string;
+  label: string;
+}
 
 interface BookingFormProps {
   doctorId: string;
@@ -29,19 +56,19 @@ interface FormData {
 }
 
 const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, onCancel }) => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm<FormData>();
   const [error, setError] = useState<string | null>(null);
   const [showOTP, setShowOTP] = useState(false);
   const [formData, setFormData] = useState<FormData | null>(null);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<TimeOption[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const appointmentDate = watch('appointmentDate');
   
   // Generate available time slots when date changes
   useEffect(() => {
-    if (appointmentDate) {
-      const selectedDate = new Date(appointmentDate);
+    if (selectedDate) {
       selectedDate.setHours(0, 0, 0, 0); // Reset time part for proper comparison
       
       // Check for exceptions first
@@ -51,13 +78,17 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
       if (exception) {
         if (exception.type === 'unavailable') {
           setAvailableSlots([]);
+          setValue('appointmentTime', '');
           return;
         }
         if (exception.type === 'custom' && exception.slots) {
           const customSlots = exception.slots.flatMap(slot =>
             generateTimeSlots(slot.startTime, slot.endTime, 5, selectedDate)
           );
-          setAvailableSlots(customSlots);
+          setAvailableSlots(customSlots.map(slot => ({
+            value: slot,
+            label: format(parse(slot, 'HH:mm', new Date()), 'hh:mm a')
+          })));
           return;
         }
       }
@@ -82,12 +113,16 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
           )
         );
         
-        setAvailableSlots(filteredSlots);
+        setAvailableSlots(filteredSlots.map(slot => ({
+          value: slot,
+          label: format(parse(slot, 'HH:mm', new Date()), 'hh:mm a')
+        })));
       } else {
         setAvailableSlots([]);
+        setValue('appointmentTime', '');
       }
     }
-  }, [appointmentDate, doctor]);
+  }, [selectedDate, doctor]);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -271,13 +306,28 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
             Date
           </label>
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <input
-              type="date"
-              {...register('appointmentDate', { required: 'Date is required' })}
-              min={new Date().toISOString().split('T')[0]}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date: Date | null) => {
+                if (!date) return;
+                date.setHours(0, 0, 0, 0);
+                setSelectedDate(date);
+                setValue('appointmentDate', date.toISOString().split('T')[0]);
+              }}
+              minDate={new Date()}
+              dateFormat="MMMM d, yyyy"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 bg-white"
+              calendarClassName="date-picker-calendar"
+              popperProps={popperConfig}
+              placeholderText="Select appointment date"
+              required
+              showPopperArrow={false}
+              popperClassName="date-picker-popper"
+              popperPlacement="bottom-start"
+              shouldCloseOnSelect={true}
+              onFocus={(e) => e.target.readOnly = true}
             />
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
           </div>
           {errors.appointmentDate && (
             <p className="mt-1 text-sm text-red-600">{errors.appointmentDate.message}</p>
@@ -298,9 +348,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
               disabled={availableSlots.length === 0}
             >
               <option value="">Select time</option>
-              {availableSlots.map(slot => (
-                <option key={slot} value={slot}>
-                  {format(parse(slot, 'HH:mm', new Date()), 'hh:mm a')}
+              {availableSlots.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
                 </option>
               ))}
             </select>

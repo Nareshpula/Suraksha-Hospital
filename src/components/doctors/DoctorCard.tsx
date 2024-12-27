@@ -33,11 +33,11 @@ const DoctorCard: React.FC<DoctorProps> = ({ doctor, onSelect, isSelected }) => 
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
-      <div className="relative h-48">
+      <div className="relative h-96">
         <img
           src={doctor.image}
           alt={doctor.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain bg-gray-50"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
           <div className="flex items-center space-x-1">

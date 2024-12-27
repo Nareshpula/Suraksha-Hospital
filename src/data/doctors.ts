@@ -17,7 +17,7 @@ export const doctors = [
     specialty: "Paediatrics Specialist",
     qualification: "M.B.B.S, MD, IAP-Fellowship in Neonatology (Fernandez Hospital, Hyderabad)",
     experience: "Senior Consultant",
-    image: "https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.N.SWAPNA.jpg",
+    image: "https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.N.SWAPNA.jpg?t=2024-03-20T10:00:00.000Z",
     availability: {
       weekly: defaultWeeklyAvailability,
       exceptions: []
@@ -29,7 +29,7 @@ export const doctors = [
     specialty: "General Medicine, Physician & Diabetologist",
     qualification: "M.B.B.S., M.D General Medicine",
     experience: "Senior Consultant",
-    image: "https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.BysaniNAVEENKUMAR.jpg",
+    image: "https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.BysaniNAVEENKUMAR.jpg?t=2024-03-20T10:00:00.000Z",
     availability: {
       weekly: defaultWeeklyAvailability,
       exceptions: []
