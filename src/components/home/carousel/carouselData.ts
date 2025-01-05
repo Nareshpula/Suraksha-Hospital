@@ -1,7 +1,17 @@
 export const carouselImages = [
+    {
+    url: 'https://images.pexels.com/photos/5452221/pexels-photo-5452221.jpeg',
+    alt: 'General Medicine, Physician and Diabetologist',
+    caption: 'Dr.Bysani NAVEEN KUMAR'
+  },
+    {
+    url: 'https://images.pexels.com/photos/5452221/pexels-photo-5452221.jpeg',
+    alt: 'Paediatrics Specialist',
+    caption: 'Dr.N.SWAPNA'
+  },
   {
     url: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907',
-    alt: 'Modern Maternity Ward',
+    alt: 'Modern General Ward',
     caption: 'State-of-the-Art Maternity Facilities'
   },
   {
@@ -25,7 +35,7 @@ export const carouselImages = [
     caption: 'Care beyond cure for your little ones'
   },
   {
-    url: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc',
+    url: 'https://images.pexels.com/photos/5452221/pexels-photo-5452221.jpeg',
     alt: 'Emergency Services',
     caption: '24/7 NICU Emergency Care for Babies'
   },
@@ -50,8 +60,13 @@ export const carouselImages = [
     caption: 'Control your BP, control your health'
   },
   {
-    url: 'https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg',
-    alt: 'Medical Team',
-    caption: 'Expert Healthcare Team'
+    url: 'https://images.pexels.com/photos/5452221/pexels-photo-5452221.jpeg',
+    alt: 'Laboratory Team',
+    caption: 'Laboratory Team'
+  },
+  {
+    url: 'https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Pharmacy.jpg?t=2024-12-26T08%3A17%3A36.954Z',
+    alt: 'Pharmacy',
+    caption: 'Pharmacy Services'
   }
 ];

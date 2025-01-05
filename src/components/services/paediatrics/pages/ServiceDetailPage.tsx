@@ -90,7 +90,7 @@ const ServiceDetailPage = () => {
         {/* CTA Section */}
         <div className="mt-16 text-center">
           <button 
-            onClick={() => document.getElementById('appointment')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => navigate('/appointments')}
             className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
           >
             Book an Appointment

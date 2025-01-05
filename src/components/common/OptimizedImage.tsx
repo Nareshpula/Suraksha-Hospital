@@ -7,6 +7,7 @@ interface OptimizedImageProps {
   className?: string;
   width?: number;
   priority?: 'high' | 'low';
+  sizes?: string;
   onLoad?: () => void;
 }
 
@@ -16,9 +17,14 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   className = '',
   width,
   priority = 'low',
+  sizes,
   onLoad
 }) => {
-  const { isLoaded, optimizedSrc } = useOptimizedImage(src, { width, priority });
+  const { isLoaded, optimizedSrc } = useOptimizedImage(src, { 
+    width, 
+    priority,
+    sizes 
+  });
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -26,7 +32,9 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
       <img
-        src={optimizedSrc}
+        src={optimizedSrc.src}
+        srcSet={optimizedSrc.srcset}
+        sizes={optimizedSrc.sizes}
         alt={alt}
         className={`w-full h-full object-cover transition-opacity duration-500 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
@@ -34,6 +42,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         loading={priority === 'high' ? 'eager' : 'lazy'}
         decoding="async"
         onLoad={onLoad}
+        fetchPriority={priority}
       />
     </div>
   );

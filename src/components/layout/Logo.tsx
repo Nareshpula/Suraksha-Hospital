@@ -26,9 +26,9 @@ const Logo = () => {
         <img 
           src="https://plus.unsplash.com/premium_photo-1661292024143-a84def47313c"
           alt="Mother and Baby"
-          className="w-full h-full object-cover object-[25%_25%] group-hover:scale-110 transition-transform duration-300"
+          className="w-full h-full object-cover object-[25%_25%] group-hover:scale-110 transition-all duration-300"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-rose-500/10 group-hover:opacity-0 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-olive-500/20 group-hover:opacity-0 transition-opacity duration-300" />
       </div>
 
       {/* Hospital Name */}
@@ -37,10 +37,9 @@ const Logo = () => {
           <span 
             className="text-3xl font-bold tracking-wider font-['Montserrat']"
             style={{ 
-              color: '#FF7F50',
+              background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
               letterSpacing: '1.5px',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
-              background: 'linear-gradient(45deg, #FF7F50, #FF6B6B)',
+              textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}
@@ -49,14 +48,14 @@ const Logo = () => {
           </span>
         </div>
         <div className="flex items-center mt-1">
-          <div className="h-px w-4 bg-gradient-to-r from-[#FF7F50]/60 to-transparent" />
+          <div className="h-px w-4 bg-gradient-to-r from-white/80 to-transparent" />
           <span 
             className="text-sm font-medium tracking-[0.2em] px-1"
-            style={{ color: '#E0E0E0' }}
+            style={{ color: 'rgba(255,255,255,0.9)' }}
           >
             SPECIALITY HOSPITAL
           </span>
-          <div className="h-px flex-1 bg-gradient-to-l from-[#FF7F50]/60 to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-l from-white/80 to-transparent" />
         </div>
       </div>
     </div>

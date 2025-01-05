@@ -11,7 +11,7 @@
   status = 301
   force = true
 
-# Redirect non-www HTTP to www HTTPS
+# Redirect HTTP (non-www) to HTTPS (www)
 [[redirects]]
   from = "http://surakshahospitalmadanapalle.com/*"
   to = "https://www.surakshahospitalmadanapalle.com/:splat"

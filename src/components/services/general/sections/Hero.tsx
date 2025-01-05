@@ -8,11 +8,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ onBack }) => {
   const navigate = useNavigate();
-
-  const handleBackToServices = () => {
-    navigate('/', { state: { scrollToServices: true } });
-  };
-
+  
   return (
     <div className="relative bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-20">
       <div className="absolute inset-0">
@@ -26,7 +22,7 @@ const Hero: React.FC<HeroProps> = ({ onBack }) => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <button 
-          onClick={handleBackToServices}
+          onClick={onBack}
           className="group flex items-center text-white/90 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" />

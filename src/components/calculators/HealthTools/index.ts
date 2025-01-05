@@ -1,2 +1,1 @@
-import HealthToolsPage from './HealthToolsPage';
-export { HealthToolsPage };
+export { default as HealthToolsPage } from './HealthToolsPage';

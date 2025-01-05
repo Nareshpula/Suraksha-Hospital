@@ -10,7 +10,7 @@ const doctors = [
     specialty: 'Paediatrics Specialist',
     qualification: 'M.B.B.S, MD, IAP-Fellowship in Neonatology (Fernandez Hospital, Hyderabad)',
     experience: 'Senior Consultant',
-    image: 'https://images.pexels.com/photos/8376277/pexels-photo-8376277.jpeg',
+    image: 'https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.N.SWAPNA.jpg?t=2024-03-20T10:00:00.000Z',
     availability: 'Mon-Sat, 9:00 AM - 8:00 PM'
   },
   {
@@ -19,7 +19,7 @@ const doctors = [
     specialty: 'General Medicine, Physician & Diabetologist',
     qualification: 'M.B.B.S., M.D General Medicine',
     experience: 'Senior Consultant',
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800',
+    image: 'https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Dr.BysaniNAVEENKUMAR.jpg?t=2024-03-20T10:00:00.000Z',
     availability: 'Mon-Sat, 9:00 AM - 8:00 PM'
   }
 ];
@@ -51,12 +51,25 @@ const AppointmentBookingPage = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               {doctors.map((doctor) => (
-                <DoctorCard
-                  key={doctor.id}
-                  doctor={doctor}
-                  onSelect={handleDoctorSelect}
-                  isSelected={selectedDoctor === doctor.id}
-                />
+                <div key={doctor.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                  <div className="relative h-96">
+                    <img
+                      src={doctor.image}
+                      alt={doctor.name}
+                      className="w-full h-full object-contain bg-gray-50"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                      <div className="flex items-center space-x-1">
+                        <DoctorCard
+                          key={doctor.id}
+                          doctor={doctor}
+                          onSelect={handleDoctorSelect}
+                          isSelected={selectedDoctor === doctor.id}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
 

@@ -10,7 +10,7 @@ const WorkingHours = () => {
         <div className="flex items-start space-x-3">
           <Clock className="w-5 h-5 text-emerald-500 mt-1" />
           <div>
-            <h4 className="text-white font-medium">Emergency Services</h4>
+            <h4 className="text-white font-medium">NICU Emergency Services</h4>
             <p>24/7 Available</p>
           </div>
         </div>
@@ -18,14 +18,16 @@ const WorkingHours = () => {
           <Clock className="w-5 h-5 text-emerald-500 mt-1" />
           <div>
             <h4 className="text-white font-medium">OPD Timings</h4>
-            <p>Mon-Sat: 9:00 AM - 8:00 PM</p>
+            <p>Mon-Sat: 10:00 AM - 03:30 PM<br />
+               Evening: 06:00 PM - 09:00 PM<br />
+               Sun: 10:00 AM - 02:00 PM</p>
           </div>
         </div>
         <div className="flex items-start space-x-3">
           <Clock className="w-5 h-5 text-emerald-500 mt-1" />
           <div>
             <h4 className="text-white font-medium">Laboratory</h4>
-            <p>7:00 AM - 11:00 PM</p>
+            <p>10:00 AM - 09:00 PM</p>
           </div>
         </div>
       </div>

@@ -1,17 +1,32 @@
 // Cache for memoized values
 const memoCache = new Map<string, any>();
+const memoCacheTimers = new Map<string, NodeJS.Timeout>();
 
 // Memoization helper
-export const memoize = <T>(key: string, callback: () => T, ttl = 5000): T => {
+export const memoize = async <T>(
+  key: string,
+  callback: () => Promise<T> | T,
+  ttl = 5000
+): Promise<T> => {
   if (memoCache.has(key)) {
     return memoCache.get(key);
   }
 
-  const result = callback();
+  // Clear any existing timer
+  if (memoCacheTimers.has(key)) {
+    clearTimeout(memoCacheTimers.get(key));
+  }
+
+  const result = await callback();
   memoCache.set(key, result);
 
   // Clear cache after TTL
-  setTimeout(() => memoCache.delete(key), ttl);
+  const timer = setTimeout(() => {
+    memoCache.delete(key);
+    memoCacheTimers.delete(key);
+  }, ttl);
+  
+  memoCacheTimers.set(key, timer);
 
   return result;
 };

@@ -3,10 +3,10 @@ import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 
 const SocialLinks = () => {
   const socialLinks = [
-    { icon: Facebook, href: 'https://facebook.com/saiprashanthi' },
-    { icon: Twitter, href: 'https://twitter.com/saiprashanthi' },
-    { icon: Instagram, href: 'https://instagram.com/saiprashanthi' },
-    { icon: Youtube, href: 'https://youtube.com/saiprashanthi' }
+    { icon: Facebook, href: 'https://facebook.com/bysanisurakshahospital' },
+    { icon: Twitter, href: 'https://twitter.com/bysanisurakshahospital' },
+    { icon: Instagram, href: 'https://instagram.com/bysanisurakshahospital' },
+    { icon: Youtube, href: 'https://youtube.com/bysanisurakshahospital' }
   ];
 
   return (

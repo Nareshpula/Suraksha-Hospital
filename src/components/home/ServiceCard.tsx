@@ -1,5 +1,6 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface ServiceCardProps {
   icon: LucideIcon;
@@ -9,10 +10,12 @@ interface ServiceCardProps {
   bgColor: string;
   image: string;
   hoverImage: string;
-  onClick: () => void;
+  path?: string;
+  onClick?: () => void;
+  buttonText?: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({
+const ServiceCard = ({
   icon: Icon,
   title,
   description,
@@ -20,12 +23,31 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   bgColor,
   image,
   hoverImage,
-  onClick
-}) => {
+  path,
+  onClick,
+  buttonText
+}: ServiceCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    try {
+      if (onClick) {
+        onClick();
+      } else if (path) {
+        navigate(path);
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
+  };
+
   return (
     <div 
-      onClick={onClick}
-      className="group relative overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:-translate-y-1 hover:shadow-xl cursor-pointer"
+      onClick={(e) => {
+        e.preventDefault();
+        handleClick();
+      }}
+      className={`group relative overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:-translate-y-1 hover:shadow-xl cursor-pointer hover:scale-105`}
     >
       <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:scale-110">
         <img

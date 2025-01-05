@@ -1,33 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useServices } from '../../hooks/useServices';
 import ServiceCard from './ServiceCard';
 
 const Services = () => {
-  const navigate = useNavigate();
   const services = useServices();
-
-  const handleServiceClick = (title: string) => {
-    switch (title) {
-      case 'General Healthcare':
-        navigate('/services/general-healthcare');
-        break;
-      case 'Paediatrics':
-        navigate('/services/paediatrics');
-        break;
-      case 'Laboratory Services':
-        navigate('/services/laboratory');
-        break;
-      case 'NICU Emergency Services':
-        navigate('/services/emergency');
-        break;
-      case 'Pharmacy Services':
-        navigate('/services/pharmacy');
-        break;
-      default:
-        break;
-    }
-  };
 
   return (
     <section id="services" className="py-24 bg-gradient-to-b from-pink-50 to-white scroll-mt-16">
@@ -48,8 +24,7 @@ const Services = () => {
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <ServiceCard
-                {...service}
-                onClick={() => handleServiceClick(service.title)}
+                {...service} 
               />
             </div>
           ))}
