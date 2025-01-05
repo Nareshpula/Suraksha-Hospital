@@ -6,11 +6,37 @@ import { supabase } from '../lib/supabase';
 import { toIST, formatISTDate } from './dateTime';
 import { TIME_SLOTS } from './timeSlots'; 
 
+
 const DEBUG = import.meta.env.VITE_DEV_MODE === 'true';
 
 // Cache for availability checks
 const availabilityCache = new Map<string, { result: boolean; expiry: number }>();
 const CACHE_TTL = 30000; // 30 seconds
+
+// Batch cache for appointments
+const appointmentCache = new Map<string, { appointments: any[]; expiry: number }>();
+const APPOINTMENT_CACHE_TTL = 30000; // 30 seconds
+
+export const clearAvailabilityCache = (doctorId?: string) => {
+  if (doctorId) {
+    // Clear specific doctor's cache entries
+    for (const [key] of availabilityCache) {
+      if (key.includes(doctorId)) {
+        availabilityCache.delete(key);
+      }
+    }
+    // Clear appointment cache for doctor
+    for (const [key] of appointmentCache) {
+      if (key.includes(doctorId)) {
+        appointmentCache.delete(key);
+      }
+    }
+  } else {
+    // Clear all cache
+    availabilityCache.clear();
+    appointmentCache.clear();
+  }
+};
 
 export const isTimeSlotAvailable = async (
   date: Date,
@@ -22,21 +48,16 @@ export const isTimeSlotAvailable = async (
   const cacheKey = `availability_${doctorId}_${date.toISOString()}_${time}`;
   const now = Date.now();
 
-  // Check cache
   const cached = availabilityCache.get(cacheKey);
   if (cached && now < cached.expiry) {
-    if (DEBUG) console.log('Using cached availability result');
     return cached.result;
   }
 
-  // Clear expired cache entry
   if (cached) {
     availabilityCache.delete(cacheKey);
   }
 
   try {
-    if (DEBUG) console.log('Checking availability for:', { date, time, doctorId });
-
     const istDate = toIST(date);
     const now = toIST(new Date());
 
@@ -45,7 +66,6 @@ export const isTimeSlotAvailable = async (
     maxDate.setDate(maxDate.getDate() + 30);
 
     if (istDate < now || istDate > maxDate) {
-      if (DEBUG) console.log('Date out of range');
       return false;
     }
 
@@ -56,7 +76,6 @@ export const isTimeSlotAvailable = async (
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
       if (slotMinutes <= currentMinutes + TIME_SLOTS.BUFFER) {
-        if (DEBUG) console.log('Time slot is in past or within buffer');
         return false;
       }
     }
@@ -64,11 +83,18 @@ export const isTimeSlotAvailable = async (
     // Check exceptions
     const dateStr = formatISTDate(istDate);
     const exception = exceptions.find(e => e.date === dateStr);
+    
+    if (DEBUG) {
+      console.log('Checking exceptions for date:', dateStr);
+      console.log('Found exception:', exception);
+    }
 
     if (exception) {
       if (exception.type === 'unavailable') return false;
       if (exception.type === 'custom' && exception.slots) {
-        return isTimeInSlots(time, exception.slots);
+        const isAvailable = isTimeInSlots(time, exception.slots);
+        if (DEBUG) console.log('Custom slot availability:', isAvailable);
+        return isAvailable;
       }
     }
 
@@ -77,22 +103,36 @@ export const isTimeSlotAvailable = async (
     const daySchedule = weeklySchedule[dayOfWeek];
 
     if (!daySchedule?.isAvailable) {
-      if (DEBUG) console.log('Day not available in schedule');
       return false;
     }
     
     if (!daySchedule.slots?.length) {
-      if (DEBUG) console.log('No slots defined for day');
       return false;
     }
 
-    // Check existing appointments
-    const { data: existingAppointments } = await supabase
-      .from('appointments')
-      .select('appointment_time')
-      .eq('doctor_id', doctorId)
-      .eq('appointment_date', dateStr)
-      .neq('status', 'cancelled');
+    // Get appointments from cache or fetch
+    const appointmentCacheKey = `appointments_${doctorId}_${dateStr}`;
+    let existingAppointments;
+
+    const cachedAppointments = appointmentCache.get(appointmentCacheKey);
+    if (cachedAppointments && now < cachedAppointments.expiry) {
+      existingAppointments = cachedAppointments.appointments;
+    } else {
+      const { data } = await supabase
+        .from('appointments')
+        .select('appointment_time')
+        .eq('doctor_id', doctorId)
+        .eq('appointment_date', dateStr)
+        .neq('status', 'cancelled');
+
+      existingAppointments = data || [];
+      
+      // Cache appointments
+      appointmentCache.set(appointmentCacheKey, {
+        appointments: existingAppointments,
+        expiry: now + APPOINTMENT_CACHE_TTL
+      });
+    }
 
     if (existingAppointments?.length) {
       const [bookingHours, bookingMinutes] = time.split(':').map(Number);
@@ -105,7 +145,6 @@ export const isTimeSlotAvailable = async (
       });
 
       if (hasConflict) {
-        if (DEBUG) console.log('Slot conflicts with existing appointment');
         return false;
       }
     }
@@ -128,9 +167,6 @@ export const isTimeSlotAvailable = async (
 
 const isTimeInSlots = (time: string, slots: TimeSlot[]): boolean => {
   const timeDate = parse(time, 'HH:mm', new Date());
-  if (DEBUG) {
-    console.log('Checking time:', time, 'against slots:', JSON.stringify(slots, null, 2));
-  }
   
   return slots.some(slot => {
     const startTime = parse(slot.startTime, 'HH:mm', new Date());
@@ -142,18 +178,6 @@ const isTimeInSlots = (time: string, slots: TimeSlot[]): boolean => {
     const endMinutes = endTime.getHours() * 60 + endTime.getMinutes();
 
     const isAvailable = timeMinutes >= startMinutes && timeMinutes <= endMinutes;
-
-    if (DEBUG) {
-      console.log('Slot:', {
-        start: slot.startTime,
-        end: slot.endTime,
-        time,
-        timeMinutes,
-        startMinutes,
-        endMinutes,
-        isAvailable
-      });
-    }
 
     return isAvailable;
   });

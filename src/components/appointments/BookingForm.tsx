@@ -80,6 +80,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const appointmentDate = watch('appointmentDate');
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
+  const [slotsError, setSlotsError] = useState<string | null>(null);
 
   // Initialize with today's date
   useEffect(() => {
@@ -91,38 +92,58 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
   // Generate time slots when date changes
   useEffect(() => {
     const generateSlots = async () => {
-      try {
-        if (!selectedDate) return;
+      if (!selectedDate || !doctor?.availability) {
+        setAvailableSlots([]);
+        return;
+      }
 
+      try {
         setIsLoadingSlots(true);
-        setError(null);
+        setSlotsError(null);
 
         const istDate = toIST(selectedDate);
 
         // Get day's schedule
-        const dayName = DAYS_MAP[istDate.getDay() as keyof typeof DAYS_MAP];
+        const dayName = DAYS_MAP[istDate.getDay() as keyof typeof DAYS_MAP] as keyof WeeklyAvailability;
         const schedule = doctor?.availability?.weekly?.[dayName] || DEFAULT_WEEKLY_AVAILABILITY[dayName];
 
+        if (DEBUG) {
+          console.log('Checking schedule for:', dayName);
+          console.log('Schedule:', schedule);
+        }
+
+        // Get current availability
+        const currentAvailability = doctor?.availability || {
+          weekly: DEFAULT_WEEKLY_AVAILABILITY,
+          exceptions: []
+        };
+
         if (!schedule.isAvailable) {
-          if (DEBUG) console.log('Day not available:', dayName);
+          if (DEBUG) console.log('Day not available');
           setAvailableSlots([]);
+          setSlotsError('No appointments available on this day');
           return;
         }
 
         // Generate slots based on schedule
-        const slots = schedule.slots.flatMap(slot => {
-          return generateTimeSlots(5, istDate);
-        });
+        const timeSlots = generateTimeSlots(5, istDate, schedule);
+
+        if (!timeSlots?.length) {
+          if (DEBUG) console.log('No time slots generated');
+          setAvailableSlots([]);
+          setSlotsError('No available slots for this date');
+          return;
+        }
 
         // Filter available slots
         const availableTimeSlots = await Promise.all(
-          slots.map(async slot => {
+          timeSlots.map(async slot => {
             const isAvailable = await isTimeSlotAvailable(
               istDate,
-              slot,
+              slot.value,
               doctorId,
-              doctor?.availability?.weekly || DEFAULT_WEEKLY_AVAILABILITY,
-              doctor?.availability?.exceptions || []
+              currentAvailability.weekly || DEFAULT_WEEKLY_AVAILABILITY,
+              currentAvailability.exceptions || []
             );
             return { slot, isAvailable };
           })
@@ -131,23 +152,24 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
         const validSlots = availableTimeSlots
           .filter(({ isAvailable }) => isAvailable)
           .map(({ slot }) => ({
-            value: slot,
-            label: format(parse(slot, 'HH:mm', new Date()), 'hh:mm a')
+            value: slot.value,
+            label: format(parse(slot.value, 'HH:mm', new Date()), 'hh:mm a')
           }));
 
         if (DEBUG) console.log('Generated slots:', validSlots);
+
         setAvailableSlots(validSlots);
       } catch (err) {
-      console.error('Error generating time slots:', err);
-      setAvailableSlots([]);
-      setError('Failed to load time slots. Please try again.');
+        console.error('Error generating time slots:', err);
+        setAvailableSlots([]);
+        setSlotsError('Failed to load time slots. Please try again.');
       } finally {
         setIsLoadingSlots(false);
       }
     };
     
     generateSlots();
-  }, [selectedDate, doctor]);
+  }, [selectedDate, doctor, doctorId]);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -426,7 +448,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
             <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
             <select
               {...register('appointmentTime', { required: 'Time is required' })}
-              className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 ${
+              className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 disabled:bg-gray-100 disabled:cursor-not-allowed ${
                 isLoadingSlots ? 'bg-gray-100' : ''
               }`}
               disabled={isLoadingSlots}
@@ -439,8 +461,14 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
               ))}
             </select>
           </div>
+          {slotsError && (
+            <p className="text-sm text-red-600 mt-1">{slotsError}</p>
+          )}
           {errors.appointmentTime && (
-            <p className="mt-1 text-sm text-red-600">{errors.appointmentTime.message}</p>
+            <p className="text-sm text-red-600 mt-1">{errors.appointmentTime.message}</p>
+          )}
+          {availableSlots.length === 0 && !isLoadingSlots && !slotsError && (
+            <p className="text-sm text-gray-500 mt-1">No available slots for this date</p>
           )}
         </div>
       </div>

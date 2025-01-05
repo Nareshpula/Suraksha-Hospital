@@ -7,6 +7,7 @@ import ExceptionSchedule from './availability/ExceptionSchedule';
 import { toIST, formatISTDate, parseISTDateTime, getCurrentISTDate } from '../../utils/dateTime';
 import { supabase } from '../../lib/supabase';
 import { normalizeUUID } from '../../utils/doctorValidation';
+import { clearAvailabilityCache } from '../../utils/availability';
 
 interface DoctorAvailabilityModalProps {
   isOpen: boolean;
@@ -115,6 +116,9 @@ const DoctorAvailabilityModal: React.FC<DoctorAvailabilityModalProps> = ({
         .eq('id', doctorId);
 
       if (error) throw error;
+
+      // Clear availability cache for this doctor
+      clearAvailabilityCache(doctorId);
 
       // Success - close modal
       onClose();
