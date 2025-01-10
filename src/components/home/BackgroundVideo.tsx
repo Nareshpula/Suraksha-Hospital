@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import AppointmentSection from './AppointmentSection';
 import VideoPlayer from './VideoPlayer';
 import FallbackImage from './FallbackImage';
 import WelcomeText from './WelcomeText';
@@ -62,13 +61,14 @@ const BackgroundVideo = () => {
       )}
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-900/60 via-purple-800/40 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/60 via-emerald-800/40 to-transparent"></div>
 
       {/* Content */}
       <WelcomeText key={animationKey} />
+      
+      {/* Quick Actions */}
+      <QuickActions />
 
-      {/* Appointment Section */}
-      <AppointmentSection />
     </div>
   );
 };

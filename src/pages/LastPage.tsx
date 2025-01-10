@@ -224,10 +224,11 @@ const LastPage = () => {
             <div className="bg-white rounded-xl shadow-lg p-8">
               <Phone className="w-8 h-8 text-gray-600 mb-4" />
               <h3 className="text-xl font-semibold mb-4">Contact</h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 space-y-1">
                 Reception: 08571-220345<br />
                 Mobile: 96666426748<br />
-                Emergency: 24/7
+                Emergency: 24/7<br />
+                Email: info@surakshahospitalmadanapalle.com
               </p>
             </div>
 

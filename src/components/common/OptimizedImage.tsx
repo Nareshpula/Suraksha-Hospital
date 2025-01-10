@@ -1,5 +1,6 @@
 import React from 'react';
 import { useOptimizedImage } from '../../hooks/useOptimizedImage';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 interface OptimizedImageProps {
   src: string;
@@ -7,6 +8,8 @@ interface OptimizedImageProps {
   className?: string;
   width?: number;
   priority?: 'high' | 'low';
+  sizes?: string;
+  quality?: 'high' | 'medium' | 'low';
   onLoad?: () => void;
 }
 
@@ -16,25 +19,38 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   className = '',
   width,
   priority = 'low',
+  sizes,
+  quality = 'medium',
   onLoad
 }) => {
-  const { isLoaded, optimizedSrc } = useOptimizedImage(src, { width, priority });
+  const { elementRef, isVisible } = useIntersectionObserver();
+  const { isLoaded, optimizedSrc } = useOptimizedImage(src, { 
+    width, 
+    priority,
+    sizes,
+    quality
+  });
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div ref={elementRef} className={`relative overflow-hidden ${className}`}>
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
-      <img
-        src={optimizedSrc}
-        alt={alt}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-        loading={priority === 'high' ? 'eager' : 'lazy'}
-        decoding="async"
-        onLoad={onLoad}
-      />
+      {isVisible && (
+        <img
+          src={optimizedSrc.src}
+          srcSet={optimizedSrc.srcset}
+          sizes={optimizedSrc.sizes}
+          alt={alt}
+          className={`w-full h-full object-cover transition-opacity duration-500 ${
+            isLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          loading={priority === 'high' ? 'eager' : 'lazy'}
+          decoding="async"
+          onLoad={onLoad}
+          fetchPriority={priority}
+        />
+      )}
     </div>
   );
 };

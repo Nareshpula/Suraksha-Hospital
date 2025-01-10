@@ -6,11 +6,11 @@ import DoctorProfile from './sections/DoctorProfile';
 import FAQSection from './sections/FAQSection';
 import StickyNavigation from './sections/StickyNavigation';
 
-const GeneralHealthcarePage = () => {
+export default function GeneralHealthcarePage() {
   const navigate = useNavigate();
 
   const handleBackToServices = () => {
-    navigate('/', { state: { scrollToServices: true } });
+    navigate('/', { state: { scrollToSection: 'services' } });
   };
 
   return (
@@ -23,7 +23,3 @@ const GeneralHealthcarePage = () => {
         <FAQSection />
       </div>
     </div>
-  );
-};
-
-export default GeneralHealthcarePage;

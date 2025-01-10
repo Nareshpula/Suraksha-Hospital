@@ -14,14 +14,14 @@ const HomePage = () => {
 
   useEffect(() => {
     // Handle scroll to services section
-    if (location.state?.scrollToServices && servicesRef.current) {
+    if (location.state?.scrollToSection === 'services' && servicesRef.current) {
       setTimeout(() => {
         servicesRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
     
     // Handle scroll to health tools section
-    if (location.state?.scrollToHealthTools && healthToolsRef.current) {
+    if (location.state?.scrollToSection === 'health-tools' && healthToolsRef.current) {
       setTimeout(() => {
         healthToolsRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);

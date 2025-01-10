@@ -24,7 +24,7 @@ const FooterLinks = () => {
     {
       title: 'Quick Links',
       items: [
-        { label: 'About Us', path: '/about' },
+        { label: 'Book Appointment', path: '/appointments' },
         { label: 'Our Services', path: '#services' },
         { label: 'Our Doctors', path: '/doctors' },
         { label: 'Emergency Services', path: '/services/emergency' }

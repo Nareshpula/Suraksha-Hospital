@@ -8,7 +8,7 @@ const DoctorProfile = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <img
-              src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=1920"
+              src="https://gatgyhxtgqmzwjatbmzk.supabase.co/storage/v1/object/sign/suraksha-hospital-images/Dr.Naveen.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzdXJha3NoYS1ob3NwaXRhbC1pbWFnZXMvRHIuTmF2ZWVuLmpwZyIsImlhdCI6MTczNjUzMDM1OSwiZXhwIjoxNzY4MDY2MzU5fQ.AHcKcI1uUKaYmmziPyeOTtEojLYi-W6jwDD5rnOZovs&t=2025-01-10T17%3A32%3A39.402Z"
               alt="Dr. Bysani Naveen Kumar"
               className="rounded-lg shadow-2xl"
             />
@@ -32,11 +32,11 @@ const DoctorProfile = () => {
               </div>
               <div className="flex items-center space-x-4">
                 <BookOpen className="w-6 h-6 text-emerald-600" />
-                <span className="text-gray-700">20+ Years of Experience</span>
+                <span className="text-gray-700">15+ Years of Experience</span>
               </div>
               <div className="flex items-center space-x-4">
                 <Clock className="w-6 h-6 text-emerald-600" />
-                <span className="text-gray-700">Available Mon-Sat, 9:00 AM - 5:00 PM</span>
+                <span className="text-gray-700">Available Mon-Sat, 10:00 AM - 3:30 PM</span>
               </div>
             </div>
           </div>

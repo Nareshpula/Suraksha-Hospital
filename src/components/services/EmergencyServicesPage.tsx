@@ -6,7 +6,7 @@ const EmergencyServicesPage = () => {
   const navigate = useNavigate();
 
   const handleEmergencyCall = () => {
-    window.location.href = 'tel:+919666426748';
+    navigate('/', { state: { scrollToSection: 'services' } });
   };
 
   return (
@@ -56,7 +56,7 @@ const EmergencyServicesPage = () => {
             <div className="md:flex">
               <div className="md:flex-shrink-0 md:w-96">
                 <img
-                  src="https://images.pexels.com/photos/8376277/pexels-photo-8376277.jpeg"
+                  src="https://gatgyhxtgqmzwjatbmzk.supabase.co/storage/v1/object/sign/suraksha-hospital-images/Dr.Swapna.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzdXJha3NoYS1ob3NwaXRhbC1pbWFnZXMvRHIuU3dhcG5hLmpwZyIsImlhdCI6MTczNjUzMDA1NSwiZXhwIjoxNzY4MDY2MDU1fQ.WfjuiamtNXJ3i92kdg8XwlOFYtl0y4H8PxXAJpcUcB0&t=2025-01-10T17%3A27%3A35.606Z"
                   alt="Dr. N. Swapna"
                   className="h-full w-full object-cover md:h-full"
                 />

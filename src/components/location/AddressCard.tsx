@@ -44,8 +44,10 @@ const AddressCard = () => {
           <div>
             <h3 className="text-xl font-semibold mb-2">Working Hours</h3>
             <p className="text-pink-100">
-              24/7 Emergency Services<br />
-              OPD: 9:00 AM - 8:00 PM
+              NICU Emergency: 24/7<br />
+              OPD Mon-Sat: 10:00 AM - 03:30 PM<br />
+              Evening: 06:00 PM - 09:00 PM<br />
+              Sun: 10:00 AM - 02:00 PM
             </p>
           </div>
         </div>

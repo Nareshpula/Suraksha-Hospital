@@ -9,7 +9,7 @@ const ContactSection = () => {
         <div>
           <h4 className="text-white font-medium mb-2">Location</h4>
           <p className="text-gray-400">
-            #2/259, Society Colony<br />
+            Suraksha Hospital #2/259, Society Colony<br />
             Near NTR Circle<br />
             Madanapalle-517325<br />
             Annamayya-Rayachoty, Dist<br />
@@ -24,8 +24,8 @@ const ContactSection = () => {
           <h4 className="text-white font-medium mb-2">Contact Numbers</h4>
           <p className="text-gray-400">
             Reception: 08571-220345<br />
-            Mobile: 9666426748<br />
-            Emergency: 24/7
+            Mobile: 96666426748<br />
+            NICU Emergency: 24/7
           </p>
         </div>
       </div>
@@ -33,10 +33,10 @@ const ContactSection = () => {
       <div className="flex items-start space-x-3">
         <Mail className="w-5 h-5 text-emerald-500 mt-1 flex-shrink-0" />
         <div>
-          <h4 className="text-white font-medium mb-2">Email</h4>
+          <h4 className="text-white font-medium mb-2">Contact</h4>
           <p className="text-gray-400">
-            info@bysanisuraksha.com<br />
-            support@bysanisuraksha.com
+            Email: info@surakshahospitalmadanapalle.com<br />
+            Available 24/7 for inquiries
           </p>
         </div>
       </div>

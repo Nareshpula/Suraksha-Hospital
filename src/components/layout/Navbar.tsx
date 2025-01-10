@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavbarStyle } from '../../hooks/useNavbarStyle';
+import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../lib/supabase';
 import Logo from './Logo';
+import UserDisplay from './UserDisplay';
 import NavbarLink from './NavbarLink';
 import MobileMenu from './MobileMenu';
 import LanguageDropdown from '../language/LanguageDropdown';
@@ -10,11 +13,28 @@ import { useTranslation } from '../language/LanguageContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasStaffAccess, setHasStaffAccess] = useState(false);
   const { navbarBackground } = useNavbarStyle();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { translations } = useTranslation();
+  const { user } = useAuth();
 
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      logout();
+      navigate('/login');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsOpen(false); // Close mobile menu if open
+    logout();
+    navigate('/login');
+  };
   useEffect(() => {
     return () => setIsOpen(false);
   }, [location.pathname]);
@@ -30,6 +50,36 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    const checkStaffAccess = async () => {
+      if (!isAuthenticated || !user?.username) {
+        setHasStaffAccess(false);
+        return;
+      }
+      
+      try {
+        const { data, error } = await supabase
+          .from('staff_users')
+          .select('role')
+          .eq('username', user.username)
+          .single();
+
+        if (error) {
+          console.error('Error checking staff access:', error);
+          setHasStaffAccess(false);
+          return;
+        }
+
+        setHasStaffAccess(!!data && ['admin', 'doctor', 'receptionist'].includes(data.role));
+      } catch (err) {
+        console.error('Failed to check staff access:', err);
+        setHasStaffAccess(false);
+      }
+    };
+
+    checkStaffAccess();
+  }, [isAuthenticated, user?.username]);
+
   const navigateToHome = () => {
     navigate('/');
     window.scrollTo(0, 0);
@@ -42,7 +92,12 @@ const Navbar = () => {
   };
 
   const navigateToHealthTools = () => {
-    navigate('/health-tools', { replace: true });
+    navigate('/health-tools');
+    setIsOpen(false);
+  };
+
+  const navigateToAppointments = () => {
+    navigate('/appointments');
     setIsOpen(false);
   };
 
@@ -86,6 +141,29 @@ const Navbar = () => {
             <NavbarLink onClick={navigateToHealthTools}>
               {translations?.nav?.healthTools || 'Health Tools'}
             </NavbarLink>
+            {hasStaffAccess && (
+              <NavbarLink onClick={() => navigate('/appointments/search')}>
+                Manage Appointments
+              </NavbarLink>
+            )}
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-white font-medium">{user?.username}</span>
+                <button
+                  onClick={handleLogout}
+                  className="text-white hover:text-emerald-200 transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="text-white hover:text-emerald-200 transition-colors"
+              >
+                Login
+              </button>
+            )}
             <LanguageDropdown />
           </div>
 

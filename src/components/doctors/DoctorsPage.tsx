@@ -1,36 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { doctors } from '../../data/doctors';
 import DoctorCard from './DoctorCard';
 
-const doctors = [
-  {
-    name: "Dr. N.SWAPNA",
-    specialty: "Paediatrics Specialist",
-    experience: "Senior Consultant",
-    education: "M.B.B.S, MD, IAP-Fellowship in Neonatology (Fernandez Hospital, Hyderabad)",
-    registrationNo: "51947",
-    image: "https://images.pexels.com/photos/8376277/pexels-photo-8376277.jpeg",
-    rating: 5,
-    contact: {
-      email: "dr.n.swapna@gmail.com",
-      phone: "+91 9666426748"
-    }
-  },
-  {
-    name: "Dr.Bysani NAVEEN KUMAR",
-    specialty: "General Medicine, Physician&Diabetologist",
-    experience: "Senior Consultant",
-    education: "M.B.B.S., M.D General Medicine, Physician and Diabetologist",
-    registrationNo: "51946",
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800",
-    rating: 5,
-    contact: {
-      email: "dr.bysaninaveenkumar@gmail.com",
-      phone: "+91 9666426748"
-    }
-  }
-];
-
 const DoctorsPage = () => {
+  const navigate = useNavigate();
+  const [selectedDoctor, setSelectedDoctor] = useState<string | null>(null);
+
+  const handleDoctorSelect = (doctorId: string) => {
+    setSelectedDoctor(doctorId);
+    navigate(`/appointments/book/${doctorId}`);
+  };
+
   return (
     <section id="doctors" className="py-24 bg-gradient-to-b from-pink-50 to-white scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,13 +23,17 @@ const DoctorsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {doctors.map((doctor, index) => (
+          {doctors.map((doctor) => (
             <div
-              key={index}
+              key={doctor.id}
               className="opacity-0 animate-fade-in"
-              style={{ animationDelay: `${index * 200}ms` }}
+              style={{ animationDelay: '200ms' }}
             >
-              <DoctorCard {...doctor} />
+              <DoctorCard
+                doctor={doctor}
+                onSelect={handleDoctorSelect}
+                isSelected={selectedDoctor === doctor.id}
+              />
             </div>
           ))}
         </div>

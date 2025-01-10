@@ -8,7 +8,7 @@ const PaediatricsPage = () => {
   const navigate = useNavigate();
 
   const handleBackToServices = () => {
-    navigate('/', { state: { scrollToServices: true } });
+    navigate('/', { state: { scrollToSection: 'services' } });
   };
 
   return (
@@ -58,7 +58,7 @@ const PaediatricsPage = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <img
-                src="https://plus.unsplash.com/premium_photo-1664474647299-7ef90322be6c"
+                src="https://gatgyhxtgqmzwjatbmzk.supabase.co/storage/v1/object/sign/suraksha-hospital-images/Dr.Swapna.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzdXJha3NoYS1ob3NwaXRhbC1pbWFnZXMvRHIuU3dhcG5hLmpwZyIsImlhdCI6MTczNjUzMDA1NSwiZXhwIjoxNzY4MDY2MDU1fQ.WfjuiamtNXJ3i92kdg8XwlOFYtl0y4H8PxXAJpcUcB0&t=2025-01-10T17%3A27%3A35.606Z"
                 alt="Dr. N. Swapna"
                 className="rounded-lg shadow-2xl"
               />
@@ -86,7 +86,7 @@ const PaediatricsPage = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <Clock className="w-6 h-6 text-blue-600" />
-                  <span className="text-gray-700">Available Mon-Sat, 9:00 AM - 5:00 PM</span>
+                  <span className="text-gray-700">Available Mon-Sat, 10:00 AM - 3:30 PM</span>
                 </div>
               </div>
             </div>

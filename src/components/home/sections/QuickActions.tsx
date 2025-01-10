@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Calendar, Building2, Siren } from 'lucide-react';
+import { Building2, Siren, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../language/LanguageContext';
 import ActionCard from '../cards/ActionCard';
@@ -15,7 +15,7 @@ const QuickActions = memo(() => {
       description: translations?.quickActions?.scheduleVisit || 'Schedule your visit',
       color: 'text-pink-600',
       bgColor: 'bg-pink-50',
-      onClick: () => console.log('Schedule appointment')
+      onClick: () => navigate('/appointments')
     },
     {
       icon: Building2,
@@ -43,7 +43,7 @@ const QuickActions = memo(() => {
   return (
     <div className="absolute bottom-8 left-0 right-0 z-10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {actions.map((action, index) => (
             <div
               key={index}

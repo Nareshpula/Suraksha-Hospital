@@ -13,7 +13,7 @@ export const serviceImages = {
     thumbnail: "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&w=800"
   },
   pharmacy: {
-    hero: "https://images.pexels.com/photos/4047184/pexels-photo-4047184.jpeg",
-    thumbnail: "https://images.pexels.com/photos/4047184/pexels-photo-4047184.jpeg?auto=compress&w=800"
+    hero: "https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Pharmacy.jpg?t=2024-12-26T08%3A17%3A36.954Z",
+    thumbnail: "https://lqfwqgmcceameepaaces.supabase.co/storage/v1/object/public/suraksha-hospital-images/Pharmacy.jpg?t=2024-12-26T08%3A17%3A36.954Z"
   }
 };

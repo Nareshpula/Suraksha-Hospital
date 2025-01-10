@@ -10,6 +10,7 @@ interface LazyImageProps {
   width?: number;
   height?: number;
   priority?: 'high' | 'low';
+  sizes?: string;
 }
 
 const LazyImage: React.FC<LazyImageProps> = ({
@@ -18,10 +19,15 @@ const LazyImage: React.FC<LazyImageProps> = ({
   className = '',
   width,
   height,
-  priority = 'low'
+  priority = 'low',
+  sizes
 }) => {
   const { elementRef, isVisible } = useIntersectionObserver();
-  const optimizedSrc = optimizeImageUrl(src, { width, quality: priority === 'high' ? 85 : 75 });
+  const optimizedSrc = optimizeImageUrl(src, { 
+    width, 
+    quality: priority === 'high' ? 85 : 75,
+    sizes 
+  });
   const { isLoading } = useImageLoading(isVisible ? optimizedSrc : '');
 
   return (
@@ -35,13 +41,16 @@ const LazyImage: React.FC<LazyImageProps> = ({
       )}
       {isVisible && (
         <img
-          src={optimizedSrc}
+          src={optimizedSrc.src}
+          srcSet={optimizedSrc.srcset}
+          sizes={optimizedSrc.sizes}
           alt={alt}
           className={`w-full h-full object-cover transition-opacity duration-500 ${
             isLoading ? 'opacity-0' : 'opacity-100'
           }`}
           loading={priority === 'high' ? 'eager' : 'lazy'}
           decoding="async"
+          fetchPriority={priority}
         />
       )}
     </div>
