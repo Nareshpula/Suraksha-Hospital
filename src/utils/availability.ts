@@ -1,9 +1,9 @@
 import { DAYS_MAP } from './constants';
 import { WeeklyAvailability, AvailabilityException, TimeSlot } from '../types/availability';
-import { parse, isAfter, isBefore, format, isSameDay } from 'date-fns';
 import { supabase } from '../lib/supabase';
 
-import { toIST, formatISTDate } from './dateTime';
+import { parse, isAfter, isBefore, format, isSameDay, addMinutes } from 'date-fns';
+import { toIST, formatISTDate, getCurrentISTDate } from './dateTime';
 import { TIME_SLOTS } from './timeSlots'; 
 
 
@@ -20,21 +20,13 @@ const APPOINTMENT_CACHE_TTL = 30000; // 30 seconds
 export const clearAvailabilityCache = (doctorId?: string) => {
   if (doctorId) {
     // Clear specific doctor's cache entries
-    for (const [key] of availabilityCache) {
-      if (key.includes(doctorId)) {
-        availabilityCache.delete(key);
-      }
-    }
-    // Clear appointment cache for doctor
-    for (const [key] of appointmentCache) {
-      if (key.includes(doctorId)) {
-        appointmentCache.delete(key);
-      }
-    }
-  } else {
-    // Clear all cache
     availabilityCache.clear();
     appointmentCache.clear();
+    if (DEBUG) console.log('Cleared availability cache for doctor:', doctorId);
+  } else {
+    availabilityCache.clear();
+    appointmentCache.clear();
+    if (DEBUG) console.log('Cleared all availability caches');
   }
 };
 
@@ -45,55 +37,18 @@ export const isTimeSlotAvailable = async (
   weeklySchedule: WeeklyAvailability,
   exceptions: AvailabilityException[]
 ): Promise<boolean> => {
-  const cacheKey = `availability_${doctorId}_${date.toISOString()}_${time}`;
-  const now = Date.now();
-
-  const cached = availabilityCache.get(cacheKey);
-  if (cached && now < cached.expiry) {
-    return cached.result;
-  }
-
-  if (cached) {
-    availabilityCache.delete(cacheKey);
-  }
-
   try {
     const istDate = toIST(date);
-    const now = toIST(new Date());
-
-    // Check if date is in valid range
-    const maxDate = new Date(now);
-    maxDate.setDate(maxDate.getDate() + 30);
-
-    if (istDate < now || istDate > maxDate) {
-      return false;
-    }
-
-    // For same day bookings, check if time is past with buffer
-    if (isSameDay(istDate, now)) {
-      const [hours, minutes] = time.split(':').map(Number);
-      const slotMinutes = hours * 60 + minutes;
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-      if (slotMinutes <= currentMinutes + TIME_SLOTS.BUFFER) {
-        return false;
-      }
-    }
+    const now = Date.now();
 
     // Check exceptions
     const dateStr = formatISTDate(istDate);
     const exception = exceptions.find(e => e.date === dateStr);
     
-    if (DEBUG) {
-      console.log('Checking exceptions for date:', dateStr);
-      console.log('Found exception:', exception);
-    }
-
     if (exception) {
       if (exception.type === 'unavailable') return false;
       if (exception.type === 'custom' && exception.slots) {
         const isAvailable = isTimeInSlots(time, exception.slots);
-        if (DEBUG) console.log('Custom slot availability:', isAvailable);
         return isAvailable;
       }
     }
@@ -151,12 +106,6 @@ export const isTimeSlotAvailable = async (
 
     // Final check against weekly schedule
     const result = isTimeInSlots(time, daySchedule.slots);
-
-    // Cache the result
-    availabilityCache.set(cacheKey, {
-      result,
-      expiry: now + CACHE_TTL
-    });
 
     return result;
   } catch (error) {

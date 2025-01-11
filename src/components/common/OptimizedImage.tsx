@@ -48,7 +48,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
           loading={priority === 'high' ? 'eager' : 'lazy'}
           decoding="async"
           onLoad={onLoad}
-          fetchPriority={priority}
         />
       )}
     </div>

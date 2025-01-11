@@ -1,17 +1,38 @@
 import { format, addMinutes, parse } from 'date-fns';
-import { toIST } from './dateTime';
+import { toIST, getCurrentISTDate } from './dateTime';
 import { DAYS_MAP, DEFAULT_WEEKLY_AVAILABILITY } from './constants';
 
 // Cache for generated time slots
 const timeSlotCache = new Map<string, TimeOption[]>();
-
 const DEBUG = import.meta.env.VITE_DEV_MODE === 'true';
+
+// Cache for daily schedules
+const scheduleCache = new Map<string, { slots: TimeOption[]; expiry: number }>();
+const SCHEDULE_CACHE_TTL = 300000; // 5 minutes
 
 export const TIME_SLOTS = {
   INTERVAL: 5,      // 5-minute intervals
-  BUFFER: 30,       // 30-minute buffer for same-day appointments
   CACHE_TTL: 60000  // Cache time slots for 1 minute
 };
+
+// Pre-generate common time slots
+const commonTimeSlots = (() => {
+  const slots: TimeOption[] = [];
+  let currentTime = new Date();
+  currentTime.setHours(10, 0, 0, 0);
+  
+  const endTime = new Date();
+  endTime.setHours(20, 0, 0, 0);
+
+  while (currentTime <= endTime) {
+    slots.push({
+      value: format(currentTime, 'HH:mm'),
+      label: format(currentTime, 'hh:mm a')
+    });
+    currentTime = addMinutes(currentTime, TIME_SLOTS.INTERVAL);
+  }
+  return slots;
+})();
 
 export interface TimeOption {
   value: string;
@@ -19,7 +40,27 @@ export interface TimeOption {
 }
 
 const getCacheKey = (date: Date, interval: number): string => {
+  // For today's date, don't cache at all
+  const now = toIST(new Date());
+  const isToday = date.toDateString() === now.toDateString(); 
+  if (isToday) {
+    return `${date.toISOString()}_${now.getTime()}`; // Unique key each time
+  }
   return `${date.toISOString().split('T')[0]}_${interval}`;
+};
+
+const filterSlotsBySchedule = (slots: TimeOption[], schedule: { slots: { startTime: string; endTime: string }[] }): TimeOption[] => {
+  if (!schedule?.slots?.length) return [];
+
+  return slots.filter(slot => {
+    const slotTime = parse(slot.value, 'HH:mm', new Date());
+    
+    return schedule.slots.some(scheduleSlot => {
+      const startTime = parse(scheduleSlot.startTime, 'HH:mm', new Date());
+      const endTime = parse(scheduleSlot.endTime, 'HH:mm', new Date());
+      return slotTime >= startTime && slotTime <= endTime;
+    });
+  });
 };
 
 export const generateTimeSlots = (
@@ -27,82 +68,69 @@ export const generateTimeSlots = (
   date: Date,
   schedule: { slots: { startTime: string; endTime: string }[] }
 ): TimeOption[] => {
+  const slots: TimeOption[] = [];
+  const istDate = toIST(date);
+
   const cacheKey = getCacheKey(date, interval);
   const currentTime = Date.now();
+  const now = toIST(new Date());
+  const isToday = date.toDateString() === now.toDateString();
+
+  if (DEBUG) {
+    console.log('Generating slots for:', {
+      date: format(istDate, 'yyyy-MM-dd'),
+      schedule
+    });
+  }
+  
+  if (DEBUG) {
+    console.log('Time calculations:', {
+      date: format(istDate, 'yyyy-MM-dd'),
+      isToday,
+      currentTime: format(now, 'HH:mm')
+    });
+  }
+
+  // For today, don't use cache to ensure fresh slots
+  if (isToday) {
+    timeSlotCache.delete(cacheKey);
+    if (DEBUG) console.log('Cleared cache for today');
+  }
 
   // Check cache first
   const cached = timeSlotCache.get(cacheKey);
   if (cached) {
+    if (DEBUG) console.log('Returning cached slots:', cached);
     return cached;
   }
 
-  const slots: TimeOption[] = [];
-  const istDate = toIST(date);
-  
   try {
-    if (DEBUG) console.log('Generating slots for date:', istDate);
-
     if (!schedule?.slots?.length) {
       if (DEBUG) console.log('No slots defined in schedule');
       return slots;
     }
 
-    // Check if it's today
-    const now = toIST(new Date());
-    const isToday = istDate.toDateString() === now.toDateString();
-    const currentMinutes = isToday ? now.getHours() * 60 + now.getMinutes() : 0;
+    const currentIST = toIST(new Date());
+    const isToday = istDate.toDateString() === currentIST.toDateString();
 
-    // Generate slots for each time range
-    schedule.slots.forEach(slot => {
-      if (!slot.startTime || !slot.endTime) {
-        console.warn('Invalid slot format:', slot);
-        return;
-      }
-
-      const [startHour, startMin] = slot.startTime.split(':').map(Number);
-      const [endHour, endMin] = slot.endTime.split(':').map(Number);
-      
-      if (isNaN(startHour) || isNaN(startMin) || isNaN(endHour) || isNaN(endMin)) {
-        console.warn('Invalid time format:', { startTime: slot.startTime, endTime: slot.endTime });
-        return;
-      }
-
-      let currentTime = new Date(istDate);
-      currentTime.setHours(startHour, startMin, 0, 0);
-      
-      const endTime = new Date(istDate);
-      endTime.setHours(endHour, endMin, 0, 0);
-
-      // Validate time range
-      if (endTime <= currentTime) {
-        console.warn('Invalid time range:', { start: slot.startTime, end: slot.endTime });
-        return;
-      }
-
-      while (currentTime <= endTime) {
-        const slotMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
-        
-        // Skip past times for today
-        if (!isToday || (slotMinutes > currentMinutes + TIME_SLOTS.BUFFER)) {
-          slots.push({
-            value: format(currentTime, 'HH:mm'),
-            label: format(currentTime, 'hh:mm a')
-          });
-        }
-
-        currentTime = addMinutes(currentTime, interval);
-      }
-    });
-
-    if (DEBUG) console.log(`Generated ${slots.length} slots`);
-
-    // Only cache if slots were generated
-    if (slots.length > 0) {
-      timeSlotCache.set(cacheKey, slots);
-      setTimeout(() => timeSlotCache.delete(cacheKey), TIME_SLOTS.CACHE_TTL);
+    // Use pre-generated slots and filter by schedule
+    const filteredSlots = filterSlotsBySchedule(commonTimeSlots, schedule);
+    
+    if (!isToday) {
+      return filteredSlots;
     }
 
-    return slots;
+    // For today, filter out past slots
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTotalMinutes = currentHour * 60 + currentMinute;
+
+    return filteredSlots.filter(slot => {
+      const [slotHour, slotMinute] = slot.value.split(':').map(Number);
+      const slotTotalMinutes = slotHour * 60 + slotMinute;
+      return slotTotalMinutes > currentTotalMinutes;
+    });
+
   } catch (error) {
     console.error('Error generating time slots:', error);
     return [];

@@ -10,28 +10,22 @@ export const DAYS_MAP = {
 
 export const DEFAULT_WEEKLY_AVAILABILITY = {
   monday: { isAvailable: true, slots: [
-    { startTime: '10:00', endTime: '15:30' },
-    { startTime: '18:00', endTime: '20:00' }
+    { startTime: '10:00', endTime: '15:30' }
   ]},
   tuesday: { isAvailable: true, slots: [
-    { startTime: '10:00', endTime: '15:30' },
-    { startTime: '18:00', endTime: '20:00' }
+    { startTime: '10:00', endTime: '15:30' }
   ]},
   wednesday: { isAvailable: true, slots: [
-    { startTime: '10:00', endTime: '15:30' },
-    { startTime: '18:00', endTime: '20:00' }
+    { startTime: '10:00', endTime: '15:30' }
   ]},
   thursday: { isAvailable: true, slots: [
-    { startTime: '10:00', endTime: '15:30' },
-    { startTime: '18:00', endTime: '20:00' }
+    { startTime: '10:00', endTime: '15:30' }
   ]},
   friday: { isAvailable: true, slots: [
-    { startTime: '10:00', endTime: '15:30' },
-    { startTime: '18:00', endTime: '20:00' }
+    { startTime: '10:00', endTime: '15:30' }
   ]},
   saturday: { isAvailable: true, slots: [
-    { startTime: '10:00', endTime: '13:00' },
-    { startTime: '18:00', endTime: '20:00' }
+    { startTime: '10:00', endTime: '13:00' }
   ]},
   sunday: { isAvailable: true, slots: [
     { startTime: '10:00', endTime: '14:00' },    

@@ -4,6 +4,7 @@ import { Calendar, User, Phone, MessageSquare, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { format, parse, addMinutes } from 'date-fns';
 import { supabase } from '../../lib/supabase';
+import { clearAvailabilityCache } from '../../utils/availability';
 import { sendBookingConfirmation } from '../../services/smsService';
 import { formatAppointmentDateTime } from '../../utils/smsValidation';
 import { DAYS_MAP, DEFAULT_WEEKLY_AVAILABILITY } from '../../utils/constants';
@@ -82,17 +83,16 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [slotsError, setSlotsError] = useState<string | null>(null);
 
-  // Initialize with today's date
-  useEffect(() => {
-    const today = new Date();
-    setSelectedDate(today);
-    setValue('appointmentDate', today.toISOString().split('T')[0]);
-  }, [setValue]);
-  
   // Generate time slots when date changes
   useEffect(() => {
     const generateSlots = async () => {
       if (!selectedDate || !doctor?.availability) {
+        if (DEBUG) {
+          console.log('No date selected or no doctor availability:', {
+            selectedDate,
+            doctorAvailability: doctor?.availability
+          });
+        }
         setAvailableSlots([]);
         return;
       }
@@ -101,7 +101,11 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
         setIsLoadingSlots(true);
         setSlotsError(null);
 
+        // Clear availability cache before generating slots
+        clearAvailabilityCache(doctorId);
+
         const istDate = toIST(selectedDate);
+
 
         // Get day's schedule
         const dayName = DAYS_MAP[istDate.getDay() as keyof typeof DAYS_MAP] as keyof WeeklyAvailability;
@@ -121,7 +125,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
         if (!schedule.isAvailable) {
           if (DEBUG) console.log('Day not available');
           setAvailableSlots([]);
-          setSlotsError('No appointments available on this day');
+          setSlotsError('This day is not available for appointments');
           return;
         }
 
@@ -131,7 +135,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
         if (!timeSlots?.length) {
           if (DEBUG) console.log('No time slots generated');
           setAvailableSlots([]);
-          setSlotsError('No available slots for this date');
+          setSlotsError('No available time slots for this date');
           return;
         }
 
@@ -159,17 +163,21 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
         if (DEBUG) console.log('Generated slots:', validSlots);
 
         setAvailableSlots(validSlots);
+
+        if (validSlots.length === 0) {
+          setSlotsError('No available time slots for this date');
+        }
       } catch (err) {
         console.error('Error generating time slots:', err);
         setAvailableSlots([]);
-        setSlotsError('Failed to load time slots. Please try again.');
+        setSlotsError('Error loading time slots. Please try again.');
       } finally {
         setIsLoadingSlots(false);
       }
     };
     
     generateSlots();
-  }, [selectedDate, doctor, doctorId]);
+  }, [selectedDate, doctor?.availability, doctorId]);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -414,18 +422,20 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
           <div className="relative">
             <DatePicker
               selected={selectedDate}
+              placeholderText="Select appointment date"
               onChange={(date: Date | null) => {
                 if (!date) return;
                 date.setHours(0, 0, 0, 0);
                 setSelectedDate(date);
                 setValue('appointmentDate', date.toISOString().split('T')[0]);
+                // Clear any previously selected time when date changes
+                setValue('appointmentTime', '');
               }}
               minDate={new Date()}
               dateFormat="MMMM d, yyyy"
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 bg-white"
               calendarClassName="date-picker-calendar"
               popperProps={popperConfig}
-              placeholderText="Select appointment date"
               required
               showPopperArrow={false}
               popperClassName="date-picker-popper"
@@ -449,11 +459,18 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
             <select
               {...register('appointmentTime', { required: 'Time is required' })}
               className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 disabled:bg-gray-100 disabled:cursor-not-allowed ${
-                isLoadingSlots ? 'bg-gray-100' : ''
+                isLoadingSlots || !selectedDate ? 'bg-gray-100' : ''
               }`}
-              disabled={isLoadingSlots}
+              disabled={isLoadingSlots || !selectedDate}
             >
-              <option value="">{isLoadingSlots ? 'Loading slots...' : 'Select time'}</option>
+              <option value="">
+                {!selectedDate 
+                  ? 'Please select a date first'
+                  : isLoadingSlots 
+                    ? 'Loading slots...' 
+                    : 'Select time'
+                }
+              </option>
               {availableSlots.map(({ value, label }) => (
                 <option key={value} value={value}>
                   {label}
@@ -467,7 +484,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ doctorId, doctor, onSuccess, 
           {errors.appointmentTime && (
             <p className="text-sm text-red-600 mt-1">{errors.appointmentTime.message}</p>
           )}
-          {availableSlots.length === 0 && !isLoadingSlots && !slotsError && (
+          {selectedDate && availableSlots.length === 0 && !isLoadingSlots && !slotsError && (
             <p className="text-sm text-gray-500 mt-1">No available slots for this date</p>
           )}
         </div>

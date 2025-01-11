@@ -33,6 +33,13 @@ export const sendBookingConfirmation = async (
         message: 'Failed to send confirmation. Please try again.'
       };
     }
+    // Handle empty response
+    if (!rpcData) {
+      return {
+        success: true,
+        message: 'Appointment confirmed successfully'
+      };
+    }
 
     return {
       success: true,

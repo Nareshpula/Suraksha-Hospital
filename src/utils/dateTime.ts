@@ -26,7 +26,8 @@ export const parseISTDateTime = (date: string, time: string): Date => {
 };
 
 export const getCurrentISTDate = (): Date => {
-  return toIST(new Date());
+  const now = new Date();
+  return toIST(now);
 };
 
 export const formatDisplayDate = (date: string): string => {
